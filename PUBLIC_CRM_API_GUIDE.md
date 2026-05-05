@@ -366,6 +366,62 @@ PUT https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/agents
   "agentToken": "k7f2u9...base64url..."
 }
 ```
+
+#### Auto-create company and/or agent on update (migration-friendly flow)
+
+`PUT /agents` is **upsert-aware** so customers can migrate their existing agents into Tour Chain in a single call, even when the company or the agent has not been onboarded yet. The endpoint mirrors the network-resilient flow of [`POST /agents`](#add-agents) and adds an extra layer for the agent itself:
+
+1. Look up the company by `companyCode` (or `companyId`).
+2. **If the company does NOT exist** and `companyCode` is provided, the server **auto-creates** the company using `companyCode` (and any optional `company` block, see below). `companyId`-only updates cannot auto-create — the server has no way to manufacture a Mongo `_id`.
+3. Look up the agent by `agentCode` inside that company.
+4. **If the agent does NOT exist**, the server **creates the agent** with the fields from the request `agent` block and issues a brand-new `agentToken`. This makes `PUT /agents` safe to use as a single "save" call regardless of prior state.
+5. **If the agent exists**, only the non-empty fields you sent are updated; the existing `agentToken` is preserved.
+
+The response always carries the current `agentToken` plus two booleans so you can tell what actually happened:
+
+| Field | Meaning |
+|-------|---------|
+| `companyAutoCreated` | `true` when this call also created the company. |
+| `agentAutoCreated`   | `true` when the agent did not exist and was created by this call. |
+
+**Optional `company` block** — used **only** when the company has to be created. Ignored when the company already exists.
+
+```json
+{
+  "companyCode": "ABC001",
+  "agentCode": "AGT001",
+  "company": {
+    "name": "ABC Travel",
+    "email": "info@abc.com",
+    "tel": "+84-28-1234567",
+    "country": "VN"
+  },
+  "agent": {
+    "name": "Nguyen Van A",
+    "title": "Sales Manager",
+    "email": "nguyenvana@abctravel.com",
+    "tel": "+84-28-1234567",
+    "active": true
+  }
+}
+```
+
+**Response (200) — both company and agent were auto-created**
+
+```json
+{
+  "success": true,
+  "message": "Company and agent auto-created. Agent saved successfully",
+  "companyId": "507f1f77bcf86cd799439011",
+  "agentCode": "AGT001",
+  "agentToken": "k7f2u9...base64url...",
+  "companyAutoCreated": true,
+  "agentAutoCreated": true
+}
+```
+
+- The endpoint is **idempotent on retry**: calling it again with the same `companyCode` + `agentCode` will not duplicate either entity. The second call simply updates the existing agent and returns `companyAutoCreated=false`, `agentAutoCreated=false`, plus the same `agentToken`.
+- Recommended client behavior for migration: just call `PUT /agents` for every agent you want to sync. If the company is missing, it is created. If the agent is missing, it is created and the `agentToken` is returned for you to persist. If both already exist, the agent is updated in place.
 ---
 
 <a id="delete-agents"></a>
