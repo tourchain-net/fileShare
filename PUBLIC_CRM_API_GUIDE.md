@@ -10,6 +10,15 @@ https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm
 
 All endpoints are JSON in / JSON out. Auth & rate-limit headers are described in the [Operational notes](#operational-notes).
 
+**Required headers**
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
+```
+
+If your client or proxy strips the `Authorization` header, send the same token with `X-ICS-API-Token` instead.
+
 ---
 
 ## Table of contents
@@ -45,6 +54,7 @@ End-to-end onboarding takes three calls:
 
 ```bash
 curl -X POST "$BASE_URL/company" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4" \
   -H "Content-Type: application/json" \
   -d '{ "name": "ABC Travel", "companyCode": "ABC001", "email": "info@abc.com" }'
 ```
@@ -53,6 +63,7 @@ curl -X POST "$BASE_URL/company" \
 
 ```bash
 curl -X POST "$BASE_URL/agents" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4" \
   -H "Content-Type: application/json" \
   -d '{
     "companyCode": "ABC001",
@@ -86,6 +97,8 @@ That's it. Everything else is detail.
 
 ```http
 POST https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 **Required:** `name`. **Recommended:** `companyCode` (otherwise the company can only be looked up by Mongo `_id`).
@@ -152,6 +165,8 @@ POST https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company
 
 ```http
 PUT https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 **Partial update** — only the fields you send are changed; everything else is left intact.
@@ -190,7 +205,10 @@ Two equivalent ways — pick whichever fits your code.
 
 ```http
 DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company/{companyCode}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+
 DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company/{companyCode}?hardDelete=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
 ```
 
 - Without `hardDelete` → soft delete (default).
@@ -200,6 +218,8 @@ DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company/{
 
 ```http
 DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 ```json
@@ -212,6 +232,12 @@ DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/company
 | Hard           | Document removed from MongoDB. **Irreversible.** |
 
 > `DELETE /api/public/crm/deleteProCodes` is **not** for companies — it targets a different collection. Don't use it here.
+> If you still need that endpoint, it also requires:
+>
+> ```http
+> Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+> Content-Type: application/json
+> ```
 
 ---
 
@@ -225,6 +251,8 @@ All agent endpoints require either **`companyCode`** or **`companyId`** to know 
 
 ```http
 POST https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/agents
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 ```json
@@ -334,6 +362,8 @@ To make the onboarding flow resilient, `POST /agents` performs a **lookup-then-c
 
 ```http
 PUT https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/agents
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 ```json
@@ -429,6 +459,8 @@ The response always carries the current `agentToken` plus two booleans so you ca
 
 ```http
 DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/agents
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4
+Content-Type: application/json
 ```
 
 ```json
@@ -458,15 +490,26 @@ DELETE https://tourchain.icstravelgroup.com/b2badminapi/api/public/crm/agents
 |-----------|---------|
 | 200 | Success — always check `success: true` in the body too. |
 | 400 | Validation or duplicate error — read `message`. |
-| 401 | Missing / invalid `X-API-Key` (when auth is enabled). |
+| 401 | Missing / invalid `Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4`. |
 | 404 | Endpoint or company / agent not found. |
 | 500 | Server error — please report. |
 
-- **Authentication**: production deployments require `X-API-Key: <your-key>` on every request. Contact the CRM team to obtain a key.
-- **Rate limit (planned)**: 100 requests/min per key. Watch `X-RateLimit-Remaining` / `X-RateLimit-Reset`.
+**Missing token response (401)**
+
+```json
+{
+  "status": 401,
+  "message": "Unauthorized"
+}
+```
+
+- **Authentication**: send the ICSTransfer token on every request with `Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4`.
+- **Auth fallback**: if `Authorization` is not forwarded by your client/proxy, send `X-ICS-API-Token: <same-token>` or `X-API-Key: <same-token>`.
+- **ICSTransfer token**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imljcy1hcGktc2VydmljZSIsInJvbGUiOiJBZG1pbiIsInN1YiI6Imljcy1pbnRlZ3JhdGlvbiJ9.4F7TpC39-UNR4HVtQ3bKANaGE1Gh8qrHb0vX6-Vk_c4`
+- **Rate limit (planned)**: 100 requests/min per token. Watch `X-RateLimit-Remaining` / `X-RateLimit-Reset`.
 - **Timezone**: all timestamps in responses are UTC ISO-8601.
 
-> ⚠️ Status: API-key enforcement and rate limiting are **scheduled** but not yet active in the current build (see appendix). Treat the API as public-but-unannounced for now.
+> ⚠️ Status: Bearer token enforcement and rate limiting are **scheduled** but not yet active in the current build (see appendix). Treat the API as public-but-unannounced for now.
 
 ---
 
