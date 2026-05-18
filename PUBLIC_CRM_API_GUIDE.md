@@ -265,11 +265,13 @@ Content-Type: application/json
       "title": "Sales Manager",
       "email": "nguyenvana@abctravel.com",
       "tel": "+84-28-1234567",
+      "country": "Thailand,Laos,India",
       "active": true
     },
     {
       "agentCode": "AGT002",
       "name": "Tran Thi B",
+      "country": "Thailand,Laos,India",
       "email": "tranthib@abctravel.com"
     }
   ]
@@ -283,6 +285,7 @@ Content-Type: application/json
 | `agentCode`  | No       | Unique inside the company. If omitted, the agent is always appended (no de-dup). |
 | `name`       | **Yes**  | Full name. |
 | `title`, `tel`, `email`, `url` | No | Contact info. |
+| `country`    | No       | Comma-separated **nation codes** the agent serves (e.g. `"th,la,in,cn"`). Full country names (e.g. `"Thailand,Laos"`) are also accepted and auto-normalized to their nation code. Stored as an array of codes. |
 | `active`     | No       | Defaults to `true`. |
 
 > 🔑 **`agentToken` is server-issued.** Do **not** send it in the request — Tour Chain generates a unique, cryptographically secure token for every new agent and returns it in `addedAgents[].agentToken` below. Persist that token on your side: it is shown **only once** in this response.
@@ -329,7 +332,7 @@ To make the onboarding flow resilient, `POST /agents` performs a **lookup-then-c
     "country": "VN"
   },
   "agents": [
-    { "agentCode": "AGT001", "name": "Nguyen Van A", "email": "nguyenvana@abctravel.com" }
+    { "agentCode": "AGT001", "name": "Nguyen Van A", "email": "nguyenvana@abctravel.com", "country": "Thailand,Laos,India", }
   ]
 }
 ```
@@ -376,6 +379,7 @@ Content-Type: application/json
     "title": "Senior Sales Manager",
     "tel": "+84-28-9999999",
     "email": "nguyenvana.new@abctravel.com",
+    "country": "Thailand,Laos,India",
     "active": true
   }
 }
@@ -383,6 +387,7 @@ Content-Type: application/json
 
 - `agent.newCode` — optional; renames the `agentCode`.
 - `agent.agentToken` — **ignored on input**. The token is server-managed; the response always returns the current `agentToken` so you can re-sync your storage if needed. If a legacy agent has no token yet, one is generated automatically on the first update.
+- `agent.country` — comma-separated **nation codes** (e.g. `"th,la,in"`) or full names (e.g. `"Thailand,Laos,India"`) — both are accepted and normalized to codes on save. Stored as an array. Send an **empty string** `""` to clear the list; **omit the field** to leave the existing list unchanged.
 - All other fields are updated only when present and non-empty.
 
 **Response (200)**
@@ -430,6 +435,7 @@ The response always carries the current `agentToken` plus two booleans so you ca
     "name": "Nguyen Van A",
     "title": "Sales Manager",
     "email": "nguyenvana@abctravel.com",
+    "country": "Thailand,Laos,India",
     "tel": "+84-28-1234567",
     "active": true
   }
